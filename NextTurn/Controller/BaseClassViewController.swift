@@ -13,15 +13,15 @@ class BaseClassViewController: UIViewController {
     @IBOutlet var quantityNumberLabels: [UILabel]!
     @IBOutlet var nameLabels: [UILabel]!
     @IBOutlet var columnOneLabels: [UILabel]!
-    @IBOutlet weak var columnTwoLabels: UILabel!
+    @IBOutlet var columnTwoLabels: UILabel!
     @IBOutlet var tipLabels: [UILabel]!
     @IBOutlet var totalLabels: [UILabel]!
     
     @IBOutlet weak var testPanLabel: UILabel!
     @IBOutlet var movableNamesCollection: [UILabel]!
     
-    var fileViewOrigin: CGPoint!
-    var fileViewOrigin2 : CGPoint!
+    var labelViewOrigin: CGPoint!
+    var labelViewOrigin2 : CGPoint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +32,7 @@ class BaseClassViewController: UIViewController {
         addBorder(label: totalLabels)
         
         addPanGesture(view: testPanLabel)
-        fileViewOrigin = testPanLabel.frame.origin
+        labelViewOrigin = testPanLabel.frame.origin
         
         view.bringSubviewToFront(testPanLabel)
         
@@ -40,7 +40,7 @@ class BaseClassViewController: UIViewController {
             
             addPanGesture(view: label)
             
-            fileViewOrigin2 = label.frame.origin
+            labelViewOrigin2 = label.frame.origin
             
         }
     }
@@ -53,24 +53,24 @@ class BaseClassViewController: UIViewController {
     
     @objc func handlePan(sender: UIPanGestureRecognizer) {
         
-        let fileView = sender.view!
+        let labelView = sender.view!
         
         switch sender.state {
             
         case .began, .changed:
             
             print("Moving")
-            moveViewWithPan(view: fileView, sender: sender)
+            moveViewWithPan(view: labelView, sender: sender)
             
         case .ended:
             
-            if fileView.frame.intersects(nameLabels[0].frame) {
-                deleteView(view: fileView)
+            if labelView.frame.intersects(nameLabels[0].frame) {
+                deleteView(view: labelView)
                 nameLabels[0].text = testPanLabel.text
                 
             } else {
                 
-                returnViewToOrigin(view: fileView)
+                returnViewToOrigin(view: labelView)
             }
         default:
             break
@@ -90,7 +90,7 @@ class BaseClassViewController: UIViewController {
         
         print("Snap back")
         UIView.animate(withDuration: 0.3, animations: {
-            view.frame.origin = self.fileViewOrigin
+            view.frame.origin = self.labelViewOrigin
         })
     }
     
