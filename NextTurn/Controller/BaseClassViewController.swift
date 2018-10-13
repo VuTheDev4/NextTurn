@@ -11,36 +11,29 @@ import UIKit
 class BaseClassViewController: UIViewController {
     
     @IBOutlet var quantityNumberLabels: [UILabel]!
-    @IBOutlet var nameLabels: [UILabel]!
     @IBOutlet var columnOneLabels: [UILabel]!
     @IBOutlet var columnTwoLabels: UILabel!
     @IBOutlet var tipLabels: [UILabel]!
     @IBOutlet var totalLabels: [UILabel]!
-    
-    @IBOutlet weak var testPanLabel: UILabel!
     @IBOutlet var movableNamesCollection: [UILabel]!
+    @IBOutlet weak var nameRowLabel: UILabel!
     
     var labelViewOrigin: CGPoint!
-    var labelViewOrigin2 : CGPoint!
+    var labelData: String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         addBorder(label: quantityNumberLabels)
-        addBorder(label: nameLabels)
         addBorder(label: tipLabels)
         addBorder(label: totalLabels)
         
-        addPanGesture(view: testPanLabel)
-        labelViewOrigin = testPanLabel.frame.origin
-        
-        view.bringSubviewToFront(testPanLabel)
-        
         for label in movableNamesCollection {
             
+            labelData = label.text
             addPanGesture(view: label)
-            
-            labelViewOrigin2 = label.frame.origin
+            labelViewOrigin = label.frame.origin
+            view.bringSubviewToFront(label)
             
         }
     }
@@ -58,18 +51,14 @@ class BaseClassViewController: UIViewController {
         switch sender.state {
             
         case .began, .changed:
-            
             print("Moving")
             moveViewWithPan(view: labelView, sender: sender)
             
         case .ended:
-            
-            if labelView.frame.intersects(nameLabels[0].frame) {
+            if labelView.frame.intersects(nameRowLabel.frame) {
+                nameRowLabel.text = labelData
                 deleteView(view: labelView)
-                nameLabels[0].text = testPanLabel.text
-                
             } else {
-                
                 returnViewToOrigin(view: labelView)
             }
         default:
@@ -94,19 +83,19 @@ class BaseClassViewController: UIViewController {
         })
     }
     
+    func deleteView(view: UIView) {
+        
+        UIView.animate(withDuration: 0.0, animations: {
+            view.alpha = 0.0
+        })
+    }
+    
     func addBorder(label: [UILabel]) {
         
         label.forEach { (label) in
             label.layer.borderColor = UIColor.black.cgColor
             label.layer.borderWidth = 1.0
         }
-    }
-    
-    func deleteView(view: UIView) {
-        
-        UIView.animate(withDuration: 0.0, animations: {
-            view.alpha = 0.0
-        })
     }
     
 }
